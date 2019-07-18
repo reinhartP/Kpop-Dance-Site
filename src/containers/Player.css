@@ -5,6 +5,10 @@
     transform: scaleX(-1);
 }
 
+.ytIframe-container {
+    transition: all 0.35s ease 0s;
+}
+
 .mirrored {
     transform: scaleX(-1);
 }
