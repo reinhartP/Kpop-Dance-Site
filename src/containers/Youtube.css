@@ -1,0 +1,10 @@
+#youtubePlayer {
+    transform: scaleX(-1);
+}
+#html-video-container {
+    transform: scaleX(-1);
+}
+
+.mirrored {
+    transform: scaleX(-1);
+}
