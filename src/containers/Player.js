@@ -11,12 +11,18 @@ class Player extends Component {
             options: { disableContextMenu: false },
             mirrored: true,
             ytIframe: '',
+            loop: {
+                enabled: false,
+                start: -1,
+                end: -1,
+            },
         };
         this.onReady = this.onReady.bind(this);
         this.toggleMirror = this.toggleMirror.bind(this);
         this.cycleVideo = this.cycleVideo.bind(this);
     }
     componentDidMount() {
+        document.body.style.background = '#202124';
         let player = new Plyr(
             document.getElementById('player'),
             this.state.options
@@ -24,14 +30,24 @@ class Player extends Component {
         this.setState({
             player,
         });
-        document.body.style.background = '#202124';
         player.on('ready', event => {
             this.onReady(event);
         });
         player.on('seeking', event => {});
         player.on('seeked', event => {});
         player.on('timeupdate', event => {
-            console.log(this.state.player.embed.getPlaybackQuality());
+            let player = this.state.player;
+            let currentTime = player.embed.getCurrentTime().toFixed(2);
+
+            let loop = {...this.state.loop};
+            if(loop.enabled) {
+                if(currentTime < loop.start) {
+                    player.embed.seekTo(loop.start);
+                }
+                if(currentTime >= loop.end) {
+                    player.embed.seekTo(loop.start);
+                }
+            }
         });
         player.on('progress', event => {});
         player.on('playing', event => {});
@@ -45,8 +61,60 @@ class Player extends Component {
         player.on('controlshidden', event => {});
         player.on('controlsshown', event => {});
         player.on('statechange', event => {
-            console.log(event);
+            switch(event.detail.code) {
+                case 0: //ended
+                    this.state.player.restart();
+                    break;
+                case 1: //playing
+                    break;
+                case 2: //paused
+                    break;
+                case 3: //buffering
+                    break;
+                case 5: //video cued
+                    break;
+                default:    //unstarted
+                    break;
+
+            }
         });
+    }
+    handleSpeed(input) {
+        let player = this.state.player.embed;
+        player.setPlaybackRate(input);
+    }
+    handleLoop(input) {
+        if(input === 'start') {
+            let start = this.state.player.embed.getCurrentTime().toFixed(2);
+            let end = this.state.loop.end;
+            this.setState({
+                loop: {
+                    enabled: (start > end) ? false : true,
+                    start: start,
+                    end: end
+                }
+            })
+        }
+        if(input === 'end') {
+            let start = this.state.loop.start;
+            let end = this.state.player.embed.getCurrentTime().toFixed(2);
+            this.setState({
+                loop: {
+                    enabled: (end > start) ? true : false,
+                    start: start,
+                    end: end,
+                }
+            })
+        }
+        if(input === 'clear') {
+            this.setState({
+                loop: {
+                    enabled: false,
+                    start: -1,
+                    end: -1,
+                }
+            })
+        }
     }
     toggleMirror() {
         let iframe = this.state.ytIframe;
@@ -78,7 +146,6 @@ class Player extends Component {
     }
     onReady(e) {
         let player = this.state.player;
-        console.log(e);
         let plyrEmbed = document.getElementsByClassName('plyr__video-embed')[0];
         this.setState({
             ytIframe: plyrEmbed.children[0],
@@ -86,7 +153,7 @@ class Player extends Component {
         this.state.ytIframe.classList.add('mirrored');
         this.state.ytIframe.classList.add('ytIframe-container');
         player.volume = 0.15;
-        player.embed.setPlaybackQuality('tiny');
+       
         player.play();
     }
 
@@ -103,8 +170,21 @@ class Player extends Component {
                             allow="autoplay"
                         />
                     </div>
+
                     <Button onClick={this.toggleMirror}>Mirror Toggle</Button>
                     <Button onClick={this.cycleVideo}>Cycle Video</Button>
+                    <Button onClick={() => this.handleLoop('start')}>Loop Start</Button>
+                    <Button onClick={() => this.handleLoop('end')}>Loop End</Button>
+                    <Button onClick={() => this.handleLoop('clear')}>Loop Clear</Button>
+                    <br></br>
+                    <Button onClick={() => this.handleSpeed(0.25)}>0.25x</Button>
+                    <Button onClick={() => this.handleSpeed(0.5)}>0.5x</Button>
+                    <Button onClick={() => this.handleSpeed(0.75)}>0.75x</Button>
+                    <Button onClick={() => this.handleSpeed(1)}>1x</Button>
+                    <Button onClick={() => this.handleSpeed(1.25)}>1.25x</Button>
+                    <Button onClick={() => this.handleSpeed(1.5)}>1.5x</Button>
+                    <Button onClick={() => this.handleSpeed(1.75)}>1.75x</Button>
+                    <Button onClick={() => this.handleSpeed(2)}>2x</Button>
                 </Container>
             </div>
         );
