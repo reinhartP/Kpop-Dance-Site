@@ -1,0 +1,12 @@
+:root {
+    --spacing: 24px;
+    --min-card-width: 210px;
+  }
+
+  .grid {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(var(--min-card-width), 1fr));
+    grid-column-gap: var(--spacing);
+    grid-row-gap: var(--spacing);
+  }
