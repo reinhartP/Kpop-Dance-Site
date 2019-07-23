@@ -10,6 +10,7 @@ class Routes extends Component {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/player" component={Player} />
+                    <Route path="/player/:id" component={Player} />
                 </Switch>
             </div>
         );
