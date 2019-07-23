@@ -31,6 +31,10 @@ function ArtistList(props) {
                                                 }}
                                             >
                                                 <Modal
+                                                    style={{
+                                                        backgroundColor:
+                                                            '#202124',
+                                                    }}
                                                     trigger={
                                                         <a
                                                             style={{
@@ -51,7 +55,7 @@ function ArtistList(props) {
                                                                 width: '100%',
                                                                 height: '720px',
                                                             }}
-                                                            src={`http://localhost:3000/player/${
+                                                            src={`player/${
                                                                 song.id
                                                             }`}
                                                         />

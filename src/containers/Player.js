@@ -164,7 +164,7 @@ class Player extends Component {
         });
         this.state.ytIframe.classList.add('mirrored');
         this.state.ytIframe.classList.add('ytIframe-container');
-        player.volume = 0.15;
+        player.volume = 0.2;
         player.play();
     }
 
