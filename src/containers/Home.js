@@ -1,79 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, Container, Grid } from 'semantic-ui-react';
+import { Loader } from 'semantic-ui-react';
 import axios from 'axios';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMusic } from '@fortawesome/free-solid-svg-icons';
-
-function ArtistList(props) {
-    if (props.artists.length > 0) {
-        return (
-            <div>
-                <ul>
-                    {props.artists.map((artist, index) => {
-                        return (
-                            <div>
-                                <li
-                                    style={{
-                                        textAlign: 'left',
-                                        color: 'white',
-                                    }}
-                                >
-                                    {artist.artist}
-                                </li>
-                                <ul>
-                                    {artist.songs.map((song, index) => {
-                                        return (
-                                            <li
-                                                style={{
-                                                    textAlign: 'left',
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                <Modal
-                                                    style={{
-                                                        backgroundColor:
-                                                            '#202124',
-                                                    }}
-                                                    trigger={
-                                                        <a
-                                                            style={{
-                                                                cursor:
-                                                                    'pointer',
-                                                            }}
-                                                        >
-                                                            {song.title}
-                                                        </a>
-                                                    }
-                                                    centered={false}
-                                                    size="fullscreen"
-                                                    closeIcon
-                                                >
-                                                    <Modal.Description>
-                                                        <iframe
-                                                            style={{
-                                                                width: '100%',
-                                                                height: '720px',
-                                                            }}
-                                                            src={`player/${
-                                                                song.id
-                                                            }`}
-                                                        />
-                                                    </Modal.Description>
-                                                </Modal>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
-                        );
-                    })}
-                </ul>
-            </div>
-        );
-    }
-    return <div />;
-}
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import { faMusic } from '@fortawesome/free-solid-svg-icons';
+import GridList from '../components/GridList';
 
 class Home extends Component {
     constructor(props) {
@@ -98,11 +29,19 @@ class Home extends Component {
             });
     }
     render() {
+        if(!this.state.isLoading)
+        {
         return (
             <div>
-                <ArtistList artists={this.state.artists} />
+                <GridList artists={this.state.artists}></GridList>
             </div>
         );
+        }
+        return (
+            <div>
+                <Loader active={this.state.isLoading}/>
+            </div>
+        )
     }
 }
 
