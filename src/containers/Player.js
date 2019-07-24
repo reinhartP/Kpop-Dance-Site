@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import { Container, Button } from 'semantic-ui-react';
+import Cookies from 'js-cookie';
 import Plyr from 'plyr';
 class Player extends Component {
     constructor(props) {
@@ -18,6 +19,7 @@ class Player extends Component {
                 end: -1,
             },
             title: '',
+            volume: 0,
         };
         this.onReady = this.onReady.bind(this);
         this.toggleMirror = this.toggleMirror.bind(this);
@@ -25,9 +27,11 @@ class Player extends Component {
     }
     componentDidMount() {
         let id = this.props.match.params.id;
+        let volume = Cookies.get('volume');
         if (id !== undefined) {
             this.setState({
                 videoId: id,
+                volume: volume === undefined ? 0.2 : volume,
             });
         }
         document.body.style.background = '#202124';
@@ -49,7 +53,7 @@ class Player extends Component {
 
             let loop = { ...this.state.loop };
             if (Math.floor(currentTime) % 10 === 0) {
-                console.log(player.embed.getPlaybackQuality());
+                //console.log(player.embed.getPlaybackQuality());
             }
             if (loop.enabled) {
                 if (currentTime < loop.start) {
@@ -64,7 +68,9 @@ class Player extends Component {
         player.on('playing', event => {});
         player.on('play', event => {});
         player.on('pause', event => {});
-        player.on('volumechange', event => {});
+        player.on('volumechange', event => {
+            Cookies.set('volume', this.state.player.volume);
+        });
         player.on('ratechange', event => {});
         player.on('ended', event => {});
         player.on('enterfullscreen', event => {});
@@ -164,7 +170,7 @@ class Player extends Component {
         });
         this.state.ytIframe.classList.add('mirrored');
         this.state.ytIframe.classList.add('ytIframe-container');
-        player.volume = 0.2;
+        player.volume = this.state.volume;
         player.play();
     }
 
@@ -178,44 +184,111 @@ class Player extends Component {
                 <Container>
                     <div className="plyr__video-embed" id="player">
                         <iframe
-                            src={`https://www.youtube.com/embed/${id}?origin=http://localhost:3000&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp;vq=hd1080`}
+                            src={`https://www.youtube.com/embed/${id}?origin=http://localhost:3000&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp`}
                             allowFullScreen
                             allowtransparency="true"
                             allow="autoplay"
                         />
                     </div>
-
-                    <Button
-                        onClick={this.toggleMirror}
-                        onMouseDown={e => e.preventDefault()}
+                    <Button.Group size={'mini'} fluid={true}>
+                        <Button
+                            inverted
+                            color={'grey'}
+                            onClick={this.toggleMirror}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Mirror Toggle
+                        </Button>
+                        <Button
+                            inverted
+                            color={'grey'}
+                            onClick={() => this.handleLoop('start')}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Loop Start
+                        </Button>
+                        <Button
+                            inverted
+                            color={'grey'}
+                            onClick={() => this.handleLoop('end')}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Loop End
+                        </Button>
+                        <Button
+                            inverted
+                            color={'red'}
+                            onClick={() => this.handleLoop('clear')}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            Loop Clear
+                        </Button>
+                    </Button.Group>
+                    <br />
+                    <Button.Group
+                        inverted
+                        color={'grey'}
+                        style={{ paddingTop: '5px' }}
+                        size={'mini'}
+                        fluid={true}
                     >
-                        Mirror Toggle
-                    </Button>
-                    <Button
+                        <Button
+                            onClick={() => this.handleSpeed(0.25)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            0.25x
+                        </Button>
+                        <Button
+                            onClick={() => this.handleSpeed(0.5)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            0.5x
+                        </Button>
+                        <Button
+                            onClick={() => this.handleSpeed(0.75)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            0.75x
+                        </Button>
+                        <Button
+                            onClick={() => this.handleSpeed(1)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            1x
+                        </Button>
+                        <Button
+                            onClick={() => this.handleSpeed(1.25)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            1.25x
+                        </Button>
+                        <Button
+                            onClick={() => this.handleSpeed(1.5)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            1.5x
+                        </Button>
+                        <Button
+                            onClick={() => this.handleSpeed(1.75)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            1.75x
+                        </Button>
+                        <Button
+                            onClick={() => this.handleSpeed(2)}
+                            onMouseDown={e => e.preventDefault()}
+                        >
+                            2x
+                        </Button>
+                    </Button.Group>
+                    {/*<Button
                         onClick={this.cycleVideo}
                         onMouseDown={e => e.preventDefault()}
                     >
                         Cycle Video
-                    </Button>
-                    <Button
-                        onClick={() => this.handleLoop('start')}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        Loop Start
-                    </Button>
-                    <Button
-                        onClick={() => this.handleLoop('end')}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        Loop End
-                    </Button>
-                    <Button
-                        onClick={() => this.handleLoop('clear')}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        Loop Clear
-                    </Button>
-                    <Button
+                    </Button>*/}
+
+                    {/*<Button
                         onClick={() =>
                             this.setState({
                                 loop: {
@@ -227,56 +300,7 @@ class Player extends Component {
                         onMouseDown={e => e.preventDefault()}
                     >
                         Toggle Loop
-                    </Button>
-                    <br />
-                    <Button
-                        onClick={() => this.handleSpeed(0.25)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        0.25x
-                    </Button>
-                    <Button
-                        onClick={() => this.handleSpeed(0.5)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        0.5x
-                    </Button>
-                    <Button
-                        onClick={() => this.handleSpeed(0.75)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        0.75x
-                    </Button>
-                    <Button
-                        onClick={() => this.handleSpeed(1)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        1x
-                    </Button>
-                    <Button
-                        onClick={() => this.handleSpeed(1.25)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        1.25x
-                    </Button>
-                    <Button
-                        onClick={() => this.handleSpeed(1.5)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        1.5x
-                    </Button>
-                    <Button
-                        onClick={() => this.handleSpeed(1.75)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        1.75x
-                    </Button>
-                    <Button
-                        onClick={() => this.handleSpeed(2)}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        2x
-                    </Button>
+                    </Button>*/}
                 </Container>
             </div>
         );
