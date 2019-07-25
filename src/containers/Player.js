@@ -23,7 +23,6 @@ class Player extends Component {
         };
         this.onReady = this.onReady.bind(this);
         this.toggleMirror = this.toggleMirror.bind(this);
-        this.cycleVideo = this.cycleVideo.bind(this);
     }
     componentDidMount() {
         let id = this.props.match.params.id;
