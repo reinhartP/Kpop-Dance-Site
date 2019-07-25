@@ -1,5 +1,5 @@
 [[redirects]]
 from = "/player"
 to = "/player"
-status = 301
+status = 200
 force = true
