@@ -1,5 +1,5 @@
 
 [[reidrects]]
-    from = "/*"
-    to = "/index.html"
+    from = "/player"
+    to = "/player"
     status = 200
