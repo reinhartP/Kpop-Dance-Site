@@ -7,6 +7,8 @@
         "@fortawesome/free-solid-svg-icons": "^5.9.0",
         "@fortawesome/react-fontawesome": "^0.1.4",
         "axios": "^0.19.0",
+        "js-cookie": "^2.2.0",
+        "match-sorter": "^4.0.0",
         "plyr": "^3.5.6",
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
