@@ -1,5 +1,5 @@
 [[redirects]]
-from = "/player"
-to = "/players"
+from = "/players"
+to = "/player"
 status = 301
-force = true
+force = false
