@@ -26,24 +26,12 @@ class Home extends Component {
         await axios
             .get('https://kpop-dance-backend.herokuapp.com/api/artists')
             .then(response => {
-                console.log(response.data);
-                let artists = response.data.info;
-                let newArtists = [];
-                artists.forEach(artist => {
-                    artist.songs.forEach(song => {
-                        newArtists.push({
-                            ...song,
-                            artist: artist.artist,
-                        });
-                    });
-                });
                 if (response !== null)
                     this.setState({
                         isLoading: false,
-                        artists: newArtists,
+                        artists: response.data.info,
                     });
             });
-        this.sortSongs();
     }
 
     filterResults() {
@@ -64,7 +52,6 @@ class Home extends Component {
                     ],
                 }
             );
-            console.log(artists);
             return {
                 filteredArtists: artists,
             };

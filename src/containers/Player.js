@@ -52,9 +52,6 @@ class Player extends Component {
             let currentTime = player.embed.getCurrentTime().toFixed(2);
 
             let loop = { ...this.state.loop };
-            if (Math.floor(currentTime) % 10 === 0) {
-                //console.log(player.embed.getPlaybackQuality());
-            }
             if (loop.enabled) {
                 if (currentTime < loop.start) {
                     player.embed.seekTo(loop.start);
@@ -141,25 +138,6 @@ class Player extends Component {
         this.setState({
             mirrored: !this.state.mirrored,
         });
-    }
-    cycleVideo() {
-        let player = this.state.player;
-        player.pause();
-        let currentVideo = this.state.currentVideo + 1;
-        currentVideo =
-            currentVideo >= this.state.videoId.length ? 0 : currentVideo;
-        this.setState({
-            currentVideo: currentVideo,
-        });
-        player.source = {
-            type: 'video',
-            sources: [
-                {
-                    src: this.state.videoId[currentVideo],
-                    provider: 'youtube',
-                },
-            ],
-        };
     }
     onReady(e) {
         let player = this.state.player;
@@ -281,26 +259,6 @@ class Player extends Component {
                             2x
                         </Button>
                     </Button.Group>
-                    {/*<Button
-                        onClick={this.cycleVideo}
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        Cycle Video
-                    </Button>*/}
-
-                    {/*<Button
-                        onClick={() =>
-                            this.setState({
-                                loop: {
-                                    ...this.state.loop,
-                                    enabled: !this.state.loop.enabled,
-                                },
-                            })
-                        }
-                        onMouseDown={e => e.preventDefault()}
-                    >
-                        Toggle Loop
-                    </Button>*/}
                 </Container>
             </div>
         );

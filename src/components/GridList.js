@@ -1,19 +1,9 @@
 import React, { Component } from 'react';
-import { Modal, Grid, Container } from 'semantic-ui-react';
+import { Modal } from 'semantic-ui-react';
 import './GridList.css';
 function ArtistList(props) {
     if (props.artists.length > 0) {
         let songs = props.artists.slice(0);
-        /*props.artists.forEach(artist => {
-            artist.songs.forEach(song => {
-                songs.push({
-                    artist: artist.artist,
-                    title: song.title,
-                    thumbnail: song.thumbnail,
-                    id: song.id,
-                });
-            });
-        });*/
         return (
             <div className="grid" style={{ paddingTop: '100px' }}>
                 {songs.map(song => {
