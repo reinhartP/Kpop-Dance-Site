@@ -1,3 +1,8 @@
 [[redirects]]
   from = "/player"
   to = "/player"
+
+[[reidrects]]
+    from = "/*"
+    to = "/index.html"
+    status = 200
