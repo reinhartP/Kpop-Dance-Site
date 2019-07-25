@@ -3,8 +3,8 @@ import { Modal, Grid, Container } from 'semantic-ui-react';
 import './GridList.css';
 function ArtistList(props) {
     if (props.artists.length > 0) {
-        let songs = [];
-        props.artists.forEach(artist => {
+        let songs = props.artists.slice(0);
+        /*props.artists.forEach(artist => {
             artist.songs.forEach(song => {
                 songs.push({
                     artist: artist.artist,
@@ -13,9 +13,9 @@ function ArtistList(props) {
                     id: song.id,
                 });
             });
-        });
+        });*/
         return (
-            <div className="grid">
+            <div className="grid" style={{ paddingTop: '100px' }}>
                 {songs.map(song => {
                     return (
                         <div style={{ width: '210px' }}>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Loader } from 'semantic-ui-react';
+import { Loader, Input } from 'semantic-ui-react';
 import axios from 'axios';
-
+import matchSorter from 'match-sorter';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import GridList from '../components/GridList';
@@ -13,8 +13,12 @@ class Home extends Component {
         this.state = {
             artists: {},
             isLoading: true,
+            searchString: '',
+            filteredArtists: [],
         };
         this.sortSongs = this.sortSongs.bind(this);
+        this.filterResults = this.filterResults.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
     async componentDidMount() {
         document.body.style.background = '#202124';
@@ -22,13 +26,48 @@ class Home extends Component {
             .get('https://kpop-dance-backend.herokuapp.com/api/artists')
             .then(response => {
                 console.log(response.data);
+                let artists = response.data.info;
+                let newArtists = [];
+                artists.forEach(artist => {
+                    artist.songs.forEach(song => {
+                        newArtists.push({
+                            ...song,
+                            artist: artist.artist,
+                        });
+                    });
+                });
                 if (response !== null)
                     this.setState({
                         isLoading: false,
-                        artists: response.data.info,
+                        artists: newArtists,
                     });
             });
         this.sortSongs();
+    }
+
+    filterResults() {
+        this.setState(currentState => {
+            let artists = matchSorter(
+                currentState.artists,
+                currentState.searchString,
+                {
+                    keys: [
+                        {
+                            threshold: matchSorter.rankings.WORD_STARTS_WITH,
+                            key: 'artist',
+                        },
+                        {
+                            threshold: matchSorter.rankings.WORD_STARTS_WITH,
+                            key: 'title',
+                        },
+                    ],
+                }
+            );
+            console.log(artists);
+            return {
+                filteredArtists: artists,
+            };
+        });
     }
 
     sortSongs(type = 'artist asc') {
@@ -48,11 +87,24 @@ class Home extends Component {
                     break;
             }
     }
+    handleChange = (event, data) => {
+        this.setState({
+            searchString: data.value,
+        });
+        this.filterResults();
+    };
     render() {
         if (!this.state.isLoading) {
             return (
-                <div style={{ paddingTop: '100px' }}>
-                    <GridList artists={this.state.artists} />
+                <div>
+                    <Input onChange={this.handleChange} />
+                    <GridList
+                        artists={
+                            this.state.filteredArtists.length > 0
+                                ? this.state.filteredArtists
+                                : this.state.artists
+                        }
+                    />
                 </div>
             );
         }
