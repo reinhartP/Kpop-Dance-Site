@@ -1,5 +1,5 @@
-
-[[reidrects]]
-    from = "/player"
-    to = "/player"
-    force = true
+[[redirects]]
+from = "/player"
+to = "/player"
+status = 301
+force = false
