@@ -2,4 +2,4 @@
 from = "/player"
 to = "/player"
 status = 301
-force = false
+force = true
