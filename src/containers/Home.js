@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Loader, Input } from 'semantic-ui-react';
 import axios from 'axios';
+import { Helmet } from 'react-helmet';
 import matchSorter from 'match-sorter';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faMusic } from '@fortawesome/free-solid-svg-icons';
@@ -97,6 +98,12 @@ class Home extends Component {
         if (!this.state.isLoading) {
             return (
                 <div>
+                    <Helmet>
+                        <link
+                            rel="preconnect"
+                            href="https://kpop-dance-backend.herokuapp.com/api/artists"
+                        />
+                    </Helmet>
                     <Input onChange={this.handleChange} />
                     <GridList
                         artists={
