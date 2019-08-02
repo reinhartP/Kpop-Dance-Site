@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal } from 'semantic-ui-react';
 import './GridList.css';
+import Player from '../containers/Player.js';
 function ArtistList(props) {
     if (props.artists.length > 0) {
         let songs = props.artists.slice(0);
@@ -50,9 +51,14 @@ class GridList extends Component {
         this.setState({
             open,
             id,
+            destroy: false,
         });
     }
-    close = () => this.setState({ open: false });
+    close = () => {
+        this.setState({
+            open: false,
+        });
+    };
     componentDidMount() {}
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.artists !== this.props.artists) {
@@ -72,15 +78,8 @@ class GridList extends Component {
                     open={this.state.open}
                     onClose={this.close}
                 >
-                    <Modal.Description>
-                        <iframe
-                            style={{
-                                width: '100%',
-                                height: '720px',
-                            }}
-                            title="Mirrored YouTube Video"
-                            src={`player/${this.state.id}`}
-                        />
+                    <Modal.Description style={{ background: '#202124' }}>
+                        <Player id={this.state.id} />
                     </Modal.Description>
                 </Modal>
                 <ArtistList
