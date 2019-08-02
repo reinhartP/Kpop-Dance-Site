@@ -26,7 +26,8 @@ class Player extends Component {
     }
     componentDidMount() {
         document.body.style.background = '#202124';
-        let id = this.props.id;
+        console.log(this.props);
+        let id = this.props.id || this.props.match.params.id;
         let volume = Cookies.get('volume');
         if (id !== undefined) {
             this.setState(
