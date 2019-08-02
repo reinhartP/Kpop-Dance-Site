@@ -5,7 +5,7 @@ function ArtistList(props) {
     if (props.artists.length > 0) {
         let songs = props.artists.slice(0);
         return (
-            <div className="grid" style={{ paddingTop: '100px' }}>
+            <div className="grid" style={{ paddingTop: '20px' }}>
                 {songs.map(song => {
                     return (
                         <div style={{ width: '210px' }}>

@@ -32,6 +32,7 @@ class Home extends Component {
                         artists: response.data.info,
                     });
             });
+        this.sortSongs();
     }
 
     filterResults() {
@@ -91,7 +92,11 @@ class Home extends Component {
                             href="https://kpop-dance-backend.herokuapp.com/api/artists"
                         />
                     </Helmet>
-                    <Input onChange={this.handleChange} />
+                    <Input
+                        onChange={this.handleChange}
+                        placeholder="Filter..."
+                        style={{ paddingTop: '20px' }}
+                    />
                     <GridList
                         artists={
                             this.state.filteredArtists.length > 0
