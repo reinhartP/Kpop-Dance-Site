@@ -32,8 +32,8 @@ class Home extends Component {
                         artists: response.data.info,
                     });
             });
+        this.sortSongs();
     }
-
     filterResults() {
         this.setState(currentState => {
             let artists = matchSorter(
@@ -81,17 +81,22 @@ class Home extends Component {
         });
         this.filterResults();
     };
+
     render() {
         if (!this.state.isLoading) {
             return (
-                <div>
+                <div style={{ marginLeft: '15%', marginRight: '15%' }}>
                     <Helmet>
                         <link
                             rel="preconnect"
                             href="https://kpop-dance-backend.herokuapp.com/api/artists"
                         />
                     </Helmet>
-                    <Input onChange={this.handleChange} />
+                    <Input
+                        onChange={this.handleChange}
+                        placeholder="Filter..."
+                        style={{ paddingTop: '20px' }}
+                    />
                     <GridList
                         artists={
                             this.state.filteredArtists.length > 0

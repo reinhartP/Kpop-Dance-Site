@@ -7,7 +7,7 @@ class Player extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            videoId: 'ay97L0DAu9A',
+            videoId: '',
             currentVideo: 0,
             player: '',
             options: { disableContextMenu: false },
@@ -25,72 +25,78 @@ class Player extends Component {
         this.toggleMirror = this.toggleMirror.bind(this);
     }
     componentDidMount() {
-        let id = this.props.match.params.id;
+        document.body.style.background = '#202124';
+        let id = this.props.id;
         let volume = Cookies.get('volume');
         if (id !== undefined) {
-            this.setState({
-                videoId: id,
-                volume: volume === undefined ? 0.2 : volume,
-            });
-        }
-        document.body.style.background = '#202124';
-        let player = new Plyr(
-            document.getElementById('player'),
-            this.state.options
-        );
-        this.setState({
-            player,
-        });
-        player.on('ready', event => {
-            this.onReady(event);
-        });
-        player.on('seeking', event => {});
-        player.on('seeked', event => {});
-        player.on('timeupdate', event => {
-            let player = this.state.player;
-            let currentTime = player.embed.getCurrentTime().toFixed(2);
+            this.setState(
+                {
+                    videoId: id,
+                    volume: volume === undefined ? 0.2 : volume,
+                },
+                () => {
+                    let player = new Plyr(
+                        document.getElementById('player'),
+                        this.state.options
+                    );
+                    this.setState({
+                        player,
+                    });
+                    player.on('ready', event => {
+                        this.onReady(event);
+                    });
+                    player.on('seeking', event => {});
+                    player.on('seeked', event => {});
+                    player.on('timeupdate', event => {
+                        let player = this.state.player;
+                        let currentTime = player.embed
+                            .getCurrentTime()
+                            .toFixed(2);
 
-            let loop = { ...this.state.loop };
-            if (loop.enabled) {
-                if (currentTime < loop.start) {
-                    player.embed.seekTo(loop.start);
+                        let loop = { ...this.state.loop };
+                        if (loop.enabled) {
+                            if (currentTime < loop.start) {
+                                player.embed.seekTo(loop.start);
+                            }
+                            if (currentTime >= loop.end) {
+                                player.embed.seekTo(loop.start);
+                            }
+                        }
+                    });
+                    player.on('progress', event => {});
+                    player.on('playing', event => {});
+                    player.on('play', event => {});
+                    player.on('pause', event => {});
+                    player.on('volumechange', event => {
+                        Cookies.set('volume', this.state.player.volume);
+                    });
+                    player.on('ratechange', event => {});
+                    player.on('ended', event => {});
+                    player.on('enterfullscreen', event => {});
+                    player.on('exitfullscreen', event => {});
+                    player.on('controlshidden', event => {});
+                    player.on('controlsshown', event => {});
+                    player.on('statechange', event => {
+                        switch (event.detail.code) {
+                            case 0: //ended
+                                this.state.player.restart();
+                                break;
+                            case 1: //playing
+                                break;
+                            case 2: //paused
+                                break;
+                            case 3: //buffering
+                                break;
+                            case 5: //video cued
+                                break;
+                            default:
+                                //unstarted
+                                break;
+                        }
+                    });
                 }
-                if (currentTime >= loop.end) {
-                    player.embed.seekTo(loop.start);
-                }
-            }
-        });
-        player.on('progress', event => {});
-        player.on('playing', event => {});
-        player.on('play', event => {});
-        player.on('pause', event => {});
-        player.on('volumechange', event => {
-            Cookies.set('volume', this.state.player.volume);
-        });
-        player.on('ratechange', event => {});
-        player.on('ended', event => {});
-        player.on('enterfullscreen', event => {});
-        player.on('exitfullscreen', event => {});
-        player.on('controlshidden', event => {});
-        player.on('controlsshown', event => {});
-        player.on('statechange', event => {
-            switch (event.detail.code) {
-                case 0: //ended
-                    this.state.player.restart();
-                    break;
-                case 1: //playing
-                    break;
-                case 2: //paused
-                    break;
-                case 3: //buffering
-                    break;
-                case 5: //video cued
-                    break;
-                default:
-                    //unstarted
-                    break;
-            }
-        });
+            );
+        }
     }
     handleSpeed(input) {
         let player = this.state.player.embed;
@@ -152,7 +158,6 @@ class Player extends Component {
     }
 
     render() {
-        let id = this.state.videoId;
         return (
             <div>
                 <Helmet>
@@ -161,7 +166,9 @@ class Player extends Component {
                 <Container>
                     <div className="plyr__video-embed" id="player">
                         <iframe
-                            src={`https://www.youtube.com/embed/${id}?origin=http://localhost:3000&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp`}
+                            src={`https://www.youtube.com/embed/${
+                                this.state.videoId
+                            }?origin=http://localhost:3000&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp`}
                             allowFullScreen
                             allowtransparency="true"
                             allow="autoplay"
