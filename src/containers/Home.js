@@ -34,7 +34,6 @@ class Home extends Component {
             });
         this.sortSongs();
     }
-
     filterResults() {
         this.setState(currentState => {
             let artists = matchSorter(
@@ -82,10 +81,11 @@ class Home extends Component {
         });
         this.filterResults();
     };
+
     render() {
         if (!this.state.isLoading) {
             return (
-                <div>
+                <div style={{ marginLeft: '15%', marginRight: '15%' }}>
                     <Helmet>
                         <link
                             rel="preconnect"
