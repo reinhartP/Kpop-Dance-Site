@@ -3,65 +3,27 @@ import { Loader, Input, Modal } from 'semantic-ui-react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import matchSorter from 'match-sorter';
-function AdminPanel(props) {
-    if (props.artists.length > 0) {
-        return (
-            <div
-                style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    height: '100%',
-                    alignItems: 'center',
-                }}
-            >
-                {props.artists.map((artist, index) => {
-                    return (
-                        <div
-                            style={{
-                                lineHeight: '30px',
-                                height: '30px',
-                                width: '100%',
-                                marginBottom: '5px',
-                                border: '1px solid white',
-                                textAlign: 'center',
-                                alignItems: 'center',
-                                color: 'white',
-                            }}
-                            onClick={() => props.status(true, artist.id)}
-                        >
-                            {artist.artist}
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    }
-    return <div />;
-}
+import {
+    Admin,
+    Resource,
+    Create,
+    ListGuesser,
+    EditGuesser,
+    Edit,
+    List,
+    Datagrid,
+    TextField,
+    ArrayField,
+    SingleFieldList,
+    ChipField,
+    SimpleForm,
+    TextInput,
+    SimpleFormIterator,
+    ArrayInput,
+} from 'react-admin';
+import dataProvider from '../dataProvider';
 
-function EditPanel(props) {
-    if (props.songs.length > 0) {
-        return props.songs[props.currentArtist].songs.map((song, index) => {
-            return (
-                <div
-                    style={{
-                        lineHeight: '30px',
-                        height: '30px',
-                        marginBottom: '5px',
-                        border: '1px solid white',
-                        textAlign: 'center',
-                        alignItems: 'center',
-                        color: 'white',
-                    }}
-                >
-                    {song.title}
-                </div>
-            );
-        });
-    }
-    return <div />;
-}
-class Admin extends Component {
+class AdminPage extends Component {
     constructor(props) {
         super(props);
 
@@ -75,156 +37,106 @@ class Admin extends Component {
             filteredSongs: [],
             open: false,
         };
-        this.sortArtists = this.sortArtists.bind(this);
-        this.receiveStatus = this.receiveStatus.bind(this);
-        this.close = this.close.bind(this);
     }
     async componentDidMount() {
         document.body.style.background = '#202124';
         let url = 'http://localhost:4500/api/artists';
         //let url = 'https://kpop-dance-backend.herokuapp.com/api/artists';
-        await axios.get(url).then(response => {
-            if (response !== null) {
-                this.setState({
-                    isLoading: false,
-                    artists: response.data,
-                });
-            }
-        });
-        this.sortArtists();
-    }
-    componentDidUpdate(prevProps, prevState) {
-        console.log(this.state.songs);
-    }
-    filterResults() {
-        this.setState(currentState => {
-            let songs = matchSorter(
-                currentState.songs,
-                currentState.searchString,
-                {
-                    keys: [
-                        {
-                            threshold: matchSorter.rankings.WORD_STARTS_WITH,
-                            key: 'artist',
-                        },
-                        {
-                            threshold: matchSorter.rankings.WORD_STARTS_WITH,
-                            key: 'title',
-                        },
-                    ],
-                }
-            );
-            return {
-                filteredSongs: songs,
-            };
+        this.setState({
+            loading: false,
         });
     }
 
-    sortArtists(type = 'artist asc') {
-        function compareArtist(a, b) {
-            if (a.artist > b.artist) return 1;
-            return -1;
-        }
-        if (this.state.artists.length > 0)
-            switch (type) {
-                case 'artist asc':
-                    this.setState(currentState => {
-                        currentState.artists.sort(compareArtist);
-                        return {
-                            artists: currentState.artists,
-                        };
-                    });
-                    break;
-            }
-        console.log(this.state.artists);
-    }
-    handleChange = (event, data) => {
-        this.setState({
-            searchString: data.value,
-        });
-        this.filterResults();
-    };
-    async receiveStatus(open, id) {
-        console.log(id);
-        if (open === true) {
-            let url = 'http://localhost:4500/api/artists/' + id;
-            await axios.get(url).then(response => {
-                if (response !== null) {
-                    console.log(response.data);
-                    this.setState(currentState => {
-                        let artist = {
-                            artistId: id,
-                            songs: response.data,
-                        };
-                        currentState.songs.push(artist);
-                        let currentArtist = currentState.songs.length - 1;
-                        return {
-                            songs: currentState.songs,
-                            currentArtist,
-                            open,
-                        };
-                    });
-                }
-            });
-        }
-    }
-    close = () => {
-        this.setState({
-            open: false,
-        });
-    };
     render() {
-        if (!this.state.isLoading) {
-            return (
-                <div
-                    style={{
-                        height: '100vh',
-                        marginLeft: '15%',
-                        marginRight: '15%',
-                    }}
-                >
-                    <Helmet>
-                        <link
-                            rel="preconnect"
-                            href="https://kpop-dance-backend.herokuapp.com/api/artists"
-                        />
-                    </Helmet>
-                    <Modal
-                        size="large"
-                        dimmer="blurring"
-                        style={{
-                            height: '50%',
-                            background: '#202124',
-                        }}
-                        centered={false}
-                        closeIcon
-                        open={this.state.open}
-                        onClose={this.close}
-                    >
-                        <Modal.Description
-                            style={{
-                                lineHeight: '100%',
-                            }}
-                        >
-                            <EditPanel
-                                songs={this.state.songs}
-                                currentArtist={this.state.currentArtist}
-                            />
-                        </Modal.Description>
-                    </Modal>
-                    <AdminPanel
-                        artists={this.state.artists}
-                        status={this.receiveStatus}
-                    />
-                </div>
-            );
-        }
+        let provider = dataProvider('http://localhost:4500/api');
         return (
             <div>
-                <Loader active={this.state.isLoading} />
+                <Helmet>
+                    <link
+                        rel="preconnect"
+                        href="https://kpop-dance-backend.herokuapp.com/api/artists"
+                    />
+                </Helmet>
+                <Admin dataProvider={provider}>
+                    <Resource
+                        name="artists"
+                        create={ArtistCreate}
+                        list={ArtistList}
+                        edit={SongEdit}
+                    />
+                    <Resource
+                        name="songs"
+                        list={ListGuesser}
+                        edit={EditGuesser}
+                    />
+                </Admin>
             </div>
         );
     }
 }
 
-export default Admin;
+function ArtistCreate(props) {
+    return (
+        <Create {...props}>
+            <SimpleForm>
+                <TextInput source="artist" />
+                <ArrayInput source="songs">
+                    <SimpleFormIterator>
+                        <TextInput source="title" />
+                        <TextInput source="youtubeId" />
+                    </SimpleFormIterator>
+                </ArrayInput>
+            </SimpleForm>
+        </Create>
+    );
+}
+
+function ArtistList(props) {
+    return (
+        <List
+            {...props}
+            title="Artists"
+            sort={{ field: 'artist', order: 'ASC' }}
+        >
+            <Datagrid rowClick="edit">
+                <TextField source="artist" />
+                <TextField source="id" />
+            </Datagrid>
+        </List>
+    );
+}
+
+function SongList(props) {
+    return (
+        <List {...props}>
+            <Datagrid rowClick="edit">
+                <TextField source="id" />
+                <TextField source="artist" />
+                <ArrayField source="songs">
+                    <SingleFieldList>
+                        <ChipField source="title" />
+                    </SingleFieldList>
+                </ArrayField>
+            </Datagrid>
+        </List>
+    );
+}
+
+function SongEdit(props) {
+    return (
+        <Edit {...props}>
+            <SimpleForm>
+                <TextInput source="id" />
+                <TextInput source="artist" />
+                <ArrayInput source="songs">
+                    <SimpleFormIterator>
+                        <TextInput source="title" />
+                        <TextInput source="youtubeId" />
+                    </SimpleFormIterator>
+                </ArrayInput>
+            </SimpleForm>
+        </Edit>
+    );
+}
+
+export default AdminPage;

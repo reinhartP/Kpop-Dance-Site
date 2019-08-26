@@ -167,9 +167,7 @@ class Player extends Component {
                 <Container>
                     <div className="plyr__video-embed" id="player">
                         <iframe
-                            src={`https://www.youtube.com/embed/${
-                                this.state.videoId
-                            }?origin=http://localhost:3000&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp`}
+                            src={`https://www.youtube.com/embed/${this.state.videoId}?origin=http://localhost:3000&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp`}
                             allowFullScreen
                             allowtransparency="true"
                             allow="autoplay"
