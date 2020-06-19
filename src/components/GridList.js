@@ -5,34 +5,87 @@ import Player from '../containers/Player.js';
 function ArtistList(props) {
     if (props.artists.length > 0) {
         let songs = props.artists.slice(0);
-        return (
-            <div className="grid" style={{ paddingTop: '20px' }}>
-                {songs.map(song => {
-                    return (
-                        <div style={{ width: '210px' }}>
-                            <a onClick={() => props.status(true, song.id)}>
-                                <img
-                                    src={song.thumbnail}
-                                    style={{ width: '100%', cursor: 'pointer' }}
-                                />
-                            </a>
-                            <a
+        if (props.grid) {
+            return (
+                <div className="grid" style={{ paddingTop: '20px' }}>
+                    {songs.map((song) => {
+                        return (
+                            <div style={{ width: '210px' }}>
+                                <a onClick={() => props.status(true, song.id)}>
+                                    <img
+                                        src={song.thumbnail}
+                                        style={{
+                                            width: '100%',
+                                            cursor: 'pointer',
+                                        }}
+                                    />
+                                </a>
+                                <a
+                                    style={{
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        fontSize: '0.9em',
+                                    }}
+                                    onClick={() => props.status(true, song.id)}
+                                >
+                                    {song.title.length > 45
+                                        ? song.title.slice(0, 45).concat('...')
+                                        : song.title}
+                                </a>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        } else {
+            return (
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'auto',
+                        paddingTop: '20px',
+                    }}
+                >
+                    {songs.map((song) => {
+                        return (
+                            <div
                                 style={{
-                                    color: 'white',
-                                    cursor: 'pointer',
-                                    fontSize: '0.9em',
+                                    gridRow: 'auto / span 1',
+                                    width: '210px',
                                 }}
-                                onClick={() => props.status(true, song.id)}
                             >
-                                {song.title.length > 45
-                                    ? song.title.slice(0, 45).concat('...')
-                                    : song.title}
-                            </a>
-                        </div>
-                    );
-                })}
-            </div>
-        );
+                                <a onClick={() => props.status(true, song.id)}>
+                                    <img
+                                        src={song.thumbnail}
+                                        style={{
+                                            display: 'inline-block',
+                                            width: '100%',
+                                            cursor: 'pointer',
+                                        }}
+                                    />
+                                </a>
+
+                                <a
+                                    style={{
+                                        display: 'flex',
+                                        flex: '1',
+                                        flexDirection: 'column',
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        fontSize: '0.9em',
+                                    }}
+                                    onClick={() => props.status(true, song.id)}
+                                >
+                                    {song.title.length > 45
+                                        ? song.title.slice(0, 45).concat('...')
+                                        : song.title}
+                                </a>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        }
     }
     return <div />;
 }
@@ -51,7 +104,6 @@ class GridList extends Component {
         this.setState({
             open,
             id,
-            destroy: false,
         });
     }
     close = () => {
@@ -85,6 +137,7 @@ class GridList extends Component {
                 <ArtistList
                     artists={this.state.artists}
                     status={this.receiveStatus}
+                    grid={true}
                 />
             </div>
         );
