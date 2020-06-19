@@ -3,8 +3,6 @@ import { Loader, Input } from 'semantic-ui-react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import matchSorter from 'match-sorter';
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-//import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import GridList from '../components/GridList';
 
 class Home extends Component {
@@ -24,18 +22,31 @@ class Home extends Component {
     async componentDidMount() {
         document.body.style.background = '#202124';
         await axios
-            .get('https://kpop-dance-backend.herokuapp.com/api/artists')
-            .then(response => {
-                if (response !== null)
+            .get('https://kpop-dance-backend.herokuapp.com/api/songs')
+            .then((response) => {
+                if (response !== null) {
+                    let songs = [];
+                    response.data.slice(0).map((artist) => {
+                        artist.songs.map((artistSong) => {
+                            songs.push({
+                                artist: artist.artist,
+                                title: artistSong.title,
+                                thumbnail: artistSong.thumbnail,
+                                id: artistSong.id,
+                            });
+                        });
+                    });
+                    console.log(songs);
                     this.setState({
                         isLoading: false,
-                        artists: response.data.info,
+                        artists: songs,
                     });
+                }
             });
         this.sortSongs();
     }
     filterResults() {
-        this.setState(currentState => {
+        this.setState((currentState) => {
             let artists = matchSorter(
                 currentState.artists,
                 currentState.searchString,
@@ -46,7 +57,7 @@ class Home extends Component {
                             key: 'artist',
                         },
                         {
-                            threshold: matchSorter.rankings.WORD_STARTS_WITH,
+                            threshold: matchSorter.rankings.CONTAINS,
                             key: 'title',
                         },
                     ],
@@ -66,7 +77,7 @@ class Home extends Component {
         if (this.state.artists.length > 0)
             switch (type) {
                 case 'artist asc':
-                    this.setState(currentState => {
+                    this.setState((currentState) => {
                         currentState.artists.sort(compareArtist);
                         return {
                             artists: currentState.artists,
