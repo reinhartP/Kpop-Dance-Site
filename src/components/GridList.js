@@ -8,7 +8,7 @@ function ArtistList(props) {
         if (props.grid) {
             return (
                 <div className="grid" style={{ paddingTop: '20px' }}>
-                    {songs.map(song => {
+                    {songs.map((song) => {
                         return (
                             <div style={{ width: '210px' }}>
                                 <a onClick={() => props.status(true, song.id)}>
@@ -46,7 +46,7 @@ function ArtistList(props) {
                         paddingTop: '20px',
                     }}
                 >
-                    {songs.map(song => {
+                    {songs.map((song) => {
                         return (
                             <div
                                 style={{

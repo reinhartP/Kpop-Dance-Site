@@ -26,7 +26,7 @@ import {
  */
 
 export default (
-    apiUrl = 'http://localhost:4500/api',
+    apiUrl = 'https://kpop-dance-backend.herokuapp.com/api',
     httpClient = fetchUtils.fetchJson
 ) => {
     /**

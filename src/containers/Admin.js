@@ -35,15 +35,17 @@ class AdminPage extends Component {
     async componentDidMount() {
         document.body.style.background = '#202124';
 
-        let url = 'http://localhost:4500/api/artists';
-        //let url = 'https://kpop-dance-backend.herokuapp.com/api/artists';
+        //let url = 'http://localhost:4500/api/artists';
+        let url = 'https://kpop-dance-backend.herokuapp.com/api/artists';
         this.setState({
             loading: false,
         });
     }
 
     render() {
-        let provider = dataProvider('http://localhost:4500/api');
+        let provider = dataProvider(
+            'https://kpop-dance-backend.herokuapp.com/api'
+        );
         return (
             <div>
                 <Helmet>

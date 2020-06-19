@@ -22,13 +22,26 @@ class Home extends Component {
     async componentDidMount() {
         document.body.style.background = '#202124';
         await axios
-            .get('https://kpop-dance-backend.herokuapp.com/api/artists')
+            .get('https://kpop-dance-backend.herokuapp.com/api/songs')
             .then((response) => {
-                if (response !== null)
+                if (response !== null) {
+                    let songs = [];
+                    response.data.slice(0).map((artist) => {
+                        artist.songs.map((artistSong) => {
+                            songs.push({
+                                artist: artist.artist,
+                                title: artistSong.title,
+                                thumbnail: artistSong.thumbnail,
+                                id: artistSong.id,
+                            });
+                        });
+                    });
+                    console.log(songs);
                     this.setState({
                         isLoading: false,
-                        artists: response.data.info,
+                        artists: songs,
                     });
+                }
             });
         this.sortSongs();
     }
