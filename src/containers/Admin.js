@@ -1,27 +1,21 @@
 import React, { Component } from 'react';
-import { Loader, Input, Modal } from 'semantic-ui-react';
-import axios from 'axios';
 import { Helmet } from 'react-helmet';
-import matchSorter from 'match-sorter';
 import {
     Admin,
     Resource,
     Create,
-    ListGuesser,
-    EditGuesser,
     Edit,
     List,
     Datagrid,
     TextField,
-    ArrayField,
-    SingleFieldList,
-    ChipField,
     SimpleForm,
     TextInput,
     SimpleFormIterator,
     ArrayInput,
 } from 'react-admin';
+import authProvider from '../authProvider';
 import dataProvider from '../dataProvider';
+import customRoutes from '../customRoutes';
 
 class AdminPage extends Component {
     constructor(props) {
@@ -40,6 +34,7 @@ class AdminPage extends Component {
     }
     async componentDidMount() {
         document.body.style.background = '#202124';
+
         let url = 'http://localhost:4500/api/artists';
         //let url = 'https://kpop-dance-backend.herokuapp.com/api/artists';
         this.setState({
@@ -57,17 +52,16 @@ class AdminPage extends Component {
                         href="https://kpop-dance-backend.herokuapp.com/api/artists"
                     />
                 </Helmet>
-                <Admin dataProvider={provider}>
+                <Admin
+                    customRoutes={customRoutes}
+                    authProvider={authProvider}
+                    dataProvider={provider}
+                >
                     <Resource
                         name="artists"
                         create={ArtistCreate}
                         list={ArtistList}
                         edit={SongEdit}
-                    />
-                    <Resource
-                        name="songs"
-                        list={ListGuesser}
-                        edit={EditGuesser}
                     />
                 </Admin>
             </div>
@@ -101,22 +95,6 @@ function ArtistList(props) {
             <Datagrid rowClick="edit">
                 <TextField source="artist" />
                 <TextField source="id" />
-            </Datagrid>
-        </List>
-    );
-}
-
-function SongList(props) {
-    return (
-        <List {...props}>
-            <Datagrid rowClick="edit">
-                <TextField source="id" />
-                <TextField source="artist" />
-                <ArrayField source="songs">
-                    <SingleFieldList>
-                        <ChipField source="title" />
-                    </SingleFieldList>
-                </ArrayField>
             </Datagrid>
         </List>
     );
