@@ -23,6 +23,7 @@ function ArtistList(props) {
                                 >
                                     <img
                                         src={song.thumbnail}
+                                        alt={`thumbnail for youtube video with title ${song.title}`}
                                         style={{
                                             width: '100%',
                                             cursor: 'pointer',
@@ -33,54 +34,6 @@ function ArtistList(props) {
                                         ? song.title.slice(0, 45).concat('...')
                                         : song.title}
                                 </button>
-                            </div>
-                        );
-                    })}
-                </div>
-            );
-        } else {
-            return (
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'auto',
-                        paddingTop: '20px',
-                    }}
-                >
-                    {songs.map((song) => {
-                        return (
-                            <div
-                                style={{
-                                    gridRow: 'auto / span 1',
-                                    width: '210px',
-                                }}
-                            >
-                                <a onClick={() => props.status(true, song.id)}>
-                                    <img
-                                        src={song.thumbnail}
-                                        style={{
-                                            display: 'inline-block',
-                                            width: '100%',
-                                            cursor: 'pointer',
-                                        }}
-                                    />
-                                </a>
-
-                                <a
-                                    style={{
-                                        display: 'flex',
-                                        flex: '1',
-                                        flexDirection: 'column',
-                                        color: 'white',
-                                        cursor: 'pointer',
-                                        fontSize: '0.9em',
-                                    }}
-                                    onClick={() => props.status(true, song.id)}
-                                >
-                                    {song.title.length > 45
-                                        ? song.title.slice(0, 45).concat('...')
-                                        : song.title}
-                                </a>
                             </div>
                         );
                     })}
