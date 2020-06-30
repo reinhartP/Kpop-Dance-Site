@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet';
 import matchSorter from 'match-sorter';
 import GridList from '../components/GridList';
 import Request from '../components/Request';
-import './Home.css';
 class Home extends Component {
     constructor(props) {
         super(props);

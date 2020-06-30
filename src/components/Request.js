@@ -258,7 +258,11 @@ function SubmitStatusMessageContent(props) {
         <div>
             <p>
                 {content} In the meantime you can watch it{' '}
-                <a href={`/player/${videoId}`} target="_blank">
+                <a
+                    href={`/player/${videoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     here
                 </a>
             </p>
@@ -269,7 +273,7 @@ function SubmitStatusMessageContent(props) {
 function SubmitStatusMessage(props) {
     let { header, content, videoId, error, responseStatus } = props;
     console.log('videoid', videoId);
-    if (responseStatus == 422)
+    if (responseStatus === 422)
         return (
             <Message
                 error
