@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-
-import AdminPage from './Admin';
-
+import Routes from '../routes';
 class App extends Component {
     render() {
         return (
             <div className="App">
-                <AdminPage />
+                <Routes />
             </div>
         );
     }
