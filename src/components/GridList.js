@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Helmet } from 'react-helmet';
 import { Modal } from 'semantic-ui-react';
 import './GridList.css';
 import Player from '../containers/Player.js';
@@ -10,17 +11,9 @@ function ArtistList(props) {
                 <div className="grid" style={{ paddingTop: '20px' }}>
                     {songs.map((song) => {
                         return (
-                            <div style={{ width: '210px' }}>
-                                <a onClick={() => props.status(true, song.id)}>
-                                    <img
-                                        src={song.thumbnail}
-                                        style={{
-                                            width: '100%',
-                                            cursor: 'pointer',
-                                        }}
-                                    />
-                                </a>
-                                <a
+                            <div style={{ width: '210px' }} key={song.id}>
+                                <button
+                                    className="link-button"
                                     style={{
                                         color: 'white',
                                         cursor: 'pointer',
@@ -28,10 +21,18 @@ function ArtistList(props) {
                                     }}
                                     onClick={() => props.status(true, song.id)}
                                 >
+                                    <img
+                                        src={song.thumbnail}
+                                        style={{
+                                            width: '100%',
+                                            cursor: 'pointer',
+                                            paddingBottom: '4px',
+                                        }}
+                                    />
                                     {song.title.length > 45
                                         ? song.title.slice(0, 45).concat('...')
                                         : song.title}
-                                </a>
+                                </button>
                             </div>
                         );
                     })}
@@ -122,6 +123,9 @@ class GridList extends Component {
     render() {
         return (
             <div>
+                <Helmet>
+                    <title>Home</title>
+                </Helmet>
                 <Modal
                     size="large"
                     dimmer="blurring"
@@ -130,6 +134,9 @@ class GridList extends Component {
                     open={this.state.open}
                     onClose={this.close}
                 >
+                    <Modal.Content style={{ background: '#202124' }}>
+                        <a href={`/player/${this.state.id}`}>fullscreen</a>
+                    </Modal.Content>
                     <Modal.Description style={{ background: '#202124' }}>
                         <Player id={this.state.id} />
                     </Modal.Description>
