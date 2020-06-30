@@ -4,7 +4,8 @@ import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import matchSorter from 'match-sorter';
 import GridList from '../components/GridList';
-
+import Request from '../components/Request';
+import './Home.css';
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -12,7 +13,7 @@ class Home extends Component {
         this.state = {
             artists: {},
             isLoading: true,
-            searchString: '',
+            filter: '',
             filteredArtists: [],
         };
         this.sortSongs = this.sortSongs.bind(this);
@@ -26,8 +27,8 @@ class Home extends Component {
             .then((response) => {
                 if (response !== null) {
                     let songs = [];
-                    response.data.slice(0).map((artist) => {
-                        artist.songs.map((artistSong) => {
+                    response.data.slice(0).forEach((artist) => {
+                        artist.songs.forEach((artistSong) => {
                             songs.push({
                                 artist: artist.artist,
                                 title: artistSong.title,
@@ -36,7 +37,6 @@ class Home extends Component {
                             });
                         });
                     });
-                    console.log(songs);
                     this.setState({
                         isLoading: false,
                         artists: songs,
@@ -49,7 +49,7 @@ class Home extends Component {
         this.setState((currentState) => {
             let artists = matchSorter(
                 currentState.artists,
-                currentState.searchString,
+                currentState.filter,
                 {
                     keys: [
                         {
@@ -84,11 +84,17 @@ class Home extends Component {
                         };
                     });
                     break;
+                default:
+                    this.setState((currentState) => {
+                        return {
+                            artists: currentState.artists,
+                        };
+                    });
             }
     }
-    handleChange = (event, data) => {
+    handleChange = (e, data) => {
         this.setState({
-            searchString: data.value,
+            [e.target.name]: data.value,
         });
         this.filterResults();
     };
@@ -103,11 +109,14 @@ class Home extends Component {
                             href="https://kpop-dance-backend.herokuapp.com/api/artists"
                         />
                     </Helmet>
+                    <Request />
                     <Input
+                        name="filter"
                         onChange={this.handleChange}
                         placeholder="Filter..."
                         style={{ paddingTop: '20px' }}
                     />
+
                     <GridList
                         artists={
                             this.state.filteredArtists.length > 0
