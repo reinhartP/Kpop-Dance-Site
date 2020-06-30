@@ -13,10 +13,6 @@
     transform: scaleX(-1);
 }
 
-.plyr__video-embed iframe {
-    max-height: inherit;
-}
-
-.plyr__video-embed,  #player {
-    max-height: 64.5vh;
+.plyr__video-wrapper, .plyr__video-embed {
+    padding-bottom: 56.25% !important;
 }
