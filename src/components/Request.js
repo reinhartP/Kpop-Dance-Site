@@ -91,7 +91,7 @@ class Request extends Component {
         const { title, artist, url, notes } = this.state;
         await axios
             .post(
-                'https://dashboard.paghunie.com/suggestions/api/suggestions',
+                'https://kpop-dance-backend.herokuapp.com//suggestions/api/suggestions',
                 {
                     title,
                     artist,
