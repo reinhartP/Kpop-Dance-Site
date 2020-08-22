@@ -91,7 +91,7 @@ class Request extends Component {
         const { title, artist, url, notes } = this.state;
         await axios
             .post(
-                'http://localhost:4500/api/suggestions',
+                'https://dashboard.paghunie.com/suggestions/api/suggestions',
                 {
                     title,
                     artist,
@@ -128,6 +128,21 @@ class Request extends Component {
                         error: true,
                         msgHeader: 'Video was already requested',
                         msgContent: `It will be added soon :)`,
+                        videoId: response.data.videoId,
+                        responseStatus: response.status,
+                    });
+                } else if (response.status === 429) {
+                    const now = new Date();
+
+                    this.setState({
+                        success: false,
+                        error: true,
+                        msgHeader: `You've made too many requests`,
+                        msgContent: `Try again in ${Math.round(
+                            (response.headers['x-ratelimit-reset'] -
+                                Math.round(now.getTime() / 1000)) /
+                                60
+                        )} minutes.`,
                         videoId: response.data.videoId,
                         responseStatus: response.status,
                     });
@@ -273,7 +288,7 @@ function SubmitStatusMessageContent(props) {
 function SubmitStatusMessage(props) {
     let { header, content, videoId, error, responseStatus } = props;
     console.log('videoid', videoId);
-    if (responseStatus === 422)
+    if ([429, 422].includes(responseStatus))
         return (
             <Message
                 error
